@@ -1,18 +1,29 @@
 import { Request, Response } from "express"
+import { UserService } from "../services/UserService"
 
 
-const db = [{
-    name: "Denis",
-    email: "denis@usuario.com",
-}
-]
 
 export class UserController {
     createUser =  (request: Request, response: Response) => {
+        const userService = new UserService()
         const user = request.body
-        db.push(user)
-        console.log(db)
+
+
+        // ! Parametro para verificar se é nulo ou indefinido
+
+        if(!user.name){
+            return response.status(400).json({message: 'Bad Request : Nome obrigatorio!!'})
+        }
+        userService.createUser(user.name, user.email)
         return response.status(201).json({message : 'Usuario criado'})
+    }
+
+    getAllUsers = (request: Request, response: Response) => {
+        const userService = new UserService()
+
+        const users = userService.getAllUsers()
+        return response.status(200).json( users )
+
     }
  
     
